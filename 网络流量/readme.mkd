@@ -1,0 +1,19 @@
+# 流量异常
+
+1. A survey of deep learning-based network anomaly detection
+- 总体的深度学习异常检测的概述
+2. A Systematic Approach for the Application of Restricted Boltzmann Machines in Network Intrusion Detection
+- 受限波尔兹曼机异常检测
+
+
+# 流量分类
+1. A Novel Approach For Encrypted Traffic Classification Using Deep learning
+- 用深度学习分类
+
+2. us-15-Wang-The-Applications-Of-Deep-Learning-On-Traffic-Identification
+- 360研究员
+- 将流量当作图像处理
+
+3. End-to-end Encrypted Traffic Classification with One-dimensional Convolution Neural Networks
+- 中科大
+- 转换为图像
