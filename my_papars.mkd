@@ -1,0 +1,20 @@
+An Application of Machine Learing to Anomaly Detection of KPI
+
+## Abstract
+The data center and servers generates a large mount of monitoring data and logs every day,
+With the rapid development of the Internet, especially the mobile Internet, web services have penetrated into all areas of society. People use Internet search, shopping, payment, entertainment and so on. Therefore, ensuring the stability of web services has become increasingly important.
+The stability of the Web services mainly rely on operations to guarantee, operations staff through the monitoring of various key performance indicators (KPI) to judge whether the Web service is stable, because if an exception occurs to KPI, it means that the relevant application problem happened.
+
+# 1. Introduction
+
+## 1.1 kpi
+There are two types of KPIs: service KPIs and machine KPIs. Service KPIs are performance indicators that reflect the scale and quality of Web services, such as page response times, page views, and number of errors. Machine KPIs are performance indicators that can reflect the health status of machines (servers, routers, switches), such as CPU utilization, memory utilization, disk IO, network throughput, and so on.
+
+KPI anormal detection refers to the time series data of KPIs analyzed by the algorithm to determine whether abnormal behaviors occur.
+
+## 1.2 About the Problem
+1. The frequency of abnormal occurrence is very low. In the actual Operation Maintenance, there are very few exceptions in the business system, so there are very few abnormal data to be analyzed.
+2. Diversity of exceptional species. Because the actual business system is complex and constantly updated, the types of failures are varied, resulting in the diversity of the exception types.
+3. The diversity of kpis. Kpis are characterized by cycle type, characterized by stable performance, and characterized by unstable and persistent fluctuation.
+
+It not only increases the workload of the operation and maintenance personnel, but also causes the operation and maintenance personnel to find the abnormal KPI accurately and timely.

@@ -1,0 +1,99 @@
+# papars
+1. 基于大数据的时间序列异常点检测研究-南邮
+- 分为四种分量，先通过差分，选出周期，然后每个时刻为基点，找出各自对应的序列，进行趋势分析，以每一天的序列为单位进行随机误差分量分析
+
+2. 基于大数据机器学习技术的 IT 运营分析系统建设
+- 历史基线的动态监测算法,针对CPU、Memory、SWAP、diskIO 性能类 KPI 指标异常抖动情况的监控。
+- 人工标注区分异常
+- 可能出现性能容量陡增,走势不符合日常规律的情况,基线的计算需要排除异常区间的指标值;
+- 计算历史当前时刻指标标准差并乘以系数获得符合正态分布规律的波动区间,为了避免凌晨时间标准差非常小导致波动区间狭窄,而引起监控报警过于敏感的情况,额外增加常量系数
+- 算出波动区间上下限，利用storm流式计算框架对比，当偏离连续超过上下限时触发报警。
+
+3. 基于时间序列聚类方法分析北京出租车出行量的时空特征-北大
+- 时间序列聚类
+- 序列距离度量方法为：CORT
+- DWT
+- 聚类算法：PAM，比kmeans好一些。K 中值结果受簇中的边缘值和噪声的影响更小,且 K 均值的计算把每一个时刻的值进行平均,不能突出波形的作用。
+
+4. 基于季节性时间序列模型的公共自行车使用量预测研究-南京师范
+- 时间尺度越小则波动越大, 时间尺度越大则会越平滑
+- 使用量统计数据进行处理, 消除了季节性影响和趋势成分, 得到一个平稳序列, 然后根据平稳序列的自相关与偏相关函数, 建立了乘积季节预测模型
+- 标准的ARIMA使用过程。。。。
+
+5. 时间序列数据挖掘的相似性度量综述-南航
+- 综述性文章，里边的参考论文不错，参考性较强，推荐
+- 五种经典的相似性度量方法特性对比 ED DTW LCSS EDR ERP
+- 相似度研究进展
+    1. 符号化相似性：转化为字符串，然后求SAX距离
+    2. 趋势相似性
+        - DT-区间划分判断趋势 
+        - SMVT-分段聚合近似降维，然后符号化
+        - FTSC-基于二值变化趋势的时间序列相似性度量方法
+    3. 形状相似性
+        - AMSS-该方法基于向量的方向, 对时间转换、振幅平移和缩放具有较强的健壮性
+        - SIMshape-针对噪声和波动性导致的时间序列失真的情况,结合离散 Haar 小波变换, 对需要比较的序列进行多尺度形状特征提取并结合尺度权函数计算相似性。
+    4. 事件相似性
+        - 事件在时间上发生程度的排序。
+        - (RPBE),(SMBE)
+
+6. Prediction of vegetation dynamics using NDVI time series data
+- 植被变化情况的预测分析
+7. Role of Deep LSTM Neural Networks And WiFi Networks in Support of Occupancy Prediction in Smart Buildings
+- 通过wifi信号数据来预测房屋的入户率-arima/lstm
+8. Phenotyping of Clinical Time Series with LSTM Recurrent Neural Networks
+- 预测心率图
+9. Applying LSTM to Time Series Predictable through Time-Window Approaches
+- 2001年
+10 Convolutional LSTM Network: A Machine Learning Approach for Precipitation Nowcasting
+- 香港大学，降雨量预测
+- convolutional LSTM(ConvLSTM)
+
+## 异常检测
+### 1. Detection of Anomalous Drops with Limited Features and Sparse Examples in Noisy Highly Periodic Data 推荐
+- google和剑桥大学的合作项目
+- 两个步骤：通过LSTM预测，然后和真实值比较，设定规则，是连续的超过上下限或者单点超过则认为异常。
+- 问题：聚类/孤异森林异常检测适用于特征比较多的数据，ts只有一维数据
+- 每一个数据流都建立一个model，因为他们没有相关性
+- 判定异常的规则
+    - 单点预测直接设置阈值
+    - 多点
+        - 建立累加器(accumulator)
+        - 概率的方法-Gaussian Tail Probability
+- Netflix/twitter Robust Principle Component Analysis/Seasonal Hybrid Extreme Studentized Deviate test (S-H-ESD)
+- 特征处理：converted the unix timestamp into aweekday, hour, and minutes feature，one hot encodings，归一化
+
+### 2. Long Short Term Memory Networks for Anomaly Detection in Time Series 
+- 印度
+- 数据：心电图/航天飞机/电力需求以及多传感器引擎数据
+- 思路也是一样的，显示LSTM做预测，然后进行对比，error建模高斯分布，来评估异常的可能性。
+- time window，传统方式需要时间窗，stack LSTM（sigmoidal）不需要。
+- stacked LSTM
+- 评价指标：pr曲线，F1值
+
+
+# 小论文思路
+- 训练样本必须先进行异常处理。
+- 数据：周期性or非周期性
+- 时间窗的概念，通过尝试寻找周期
+- 评价指标：pr曲线，F1值
+
+# 聚类
+
+## 2.1 聚类方法
+
+- 概述：k-means聚类算法、凝聚型层次聚类算法、神经网络聚类算法之SOM,以及模糊聚类的FCM
+
+### SOM 
+- Self-organizing map 自组织映射神经网络
+- 缺点：训练时间长 
+- 应用：一般的用法是将高维的input数据在低维的空间表示，因此SOM天然是一种降维方法。除了降维，SOM还可以用于数据可视化，以及聚类等应用中。
+- 竞争学习原理：
+    神经细胞的侧抑制现象：当一个神经细胞兴奋后，会对其周围的神经细胞产生抑制作用。最强的抑制作用是竞争获胜的“唯我独兴”，这种做法称为“胜者为王”（Winner-Take-All，WTA）
+- 是否适合于时间序列聚类？
+
+##　2.2 相似性检验
+
+### 2.2.1距离
+１. 余弦距离
+    更加侧重于两个向量之间的夹角，即方向上的差异，如果都为一维向量，则不能使用余弦距离。
+周末和工作日分开。。。
