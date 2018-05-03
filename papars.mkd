@@ -70,6 +70,17 @@
 - stacked LSTM
 - 评价指标：pr曲线，F1值
 
+## 裴丹
+### 1. Opprentice: Towards Practical and Automatic Anomaly Detection Through Machine Learning- 2015年
+-  a novel approach based on supervised machine learning
+- iven a KPI, the first step for the anomaly detection practitioner is to collect the requirements from the service operators. This step encounters Definition Challenges: it is difficult to precisely define anomalies in reality [21, 25]. In particular, the operators often have trouble describing their domain knowledge completely when “put on the spot” [25]. In addition, it is often impossible for the operators to quantitatively define anomalies, let alone to translate the vague definition into specific parameters and thresholds of a detecto
+- 1先标记，2different detectors can naturally serve as the features in machine learning, so each detector can serve as a feature extractor。
+- 人工找异常和检测器找异常点
+- apply machine learning to acquiring realistic anomaly definitions and automatically combining and tuning diverse detectors to satisfy operators’ accuracy preference.
+- problem: labeling overhead, infrequent anomalies, class imbalance, and irrelevant and redundant features
+-  does not require manual detector selection, parameter configuration, or threshold tuning.
+- 
+
 
 # 小论文思路
 - 训练样本必须先进行异常处理。
