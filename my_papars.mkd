@@ -1,20 +1,89 @@
-An Application of Machine Learing to Anomaly Detection of KPI
+# An Application of Machine Learing to Anomaly Detection of key performance indicators
 
 ## Abstract
-The data center and servers generates a large mount of monitoring data and logs every day,
-With the rapid development of the Internet, especially the mobile Internet, web services have penetrated into all areas of society. People use Internet search, shopping, payment, entertainment and so on. Therefore, ensuring the stability of web services has become increasingly important.
-The stability of the Web services mainly rely on operations to guarantee, operations staff through the monitoring of various key performance indicators (KPI) to judge whether the Web service is stable, because if an exception occurs to KPI, it means that the relevant application problem happened.
+The data center and servers generates a large mount of monitoring data and logs every day, With the rapid development of the Internet, especially the mobile Internet, web services have penetrated into all areas of society. People use Internet search, shopping, payment, entertainment and so on. Therefore, ensuring the stability of web services has become increasingly important.
+The stability of the Web services mainly rely on operations to guarantee, operations staff through the monitoring of various key performance indicators (KPIs) to judge whether the Web service is stable, because if an exception occurs to KPI, it means that the relevant application problem happened.
+We investigated the question of whether or not we can predict anomalies in KPIs.Our goal is to utilize Machine Learning and statistical approaches to classify anomalous.Becuase we do not have enough labeled examples to directly apply supervised learning for anomaly classification, we approached the problem in two parts.First we use time series analysis method such as Autoregressive Integrated Moving Average model(ARIMA) and Triple Order Exponential Smoothing(Holt-Winters) and regression-based machine learning techniques such as Gradient Boosting Decision Tree(GBDT) and (Long Short-Term Memory)LSTM to perform regression and predict the expected value in the time series. Then we compare the actual values to predicted values to determine if the current point is anomalous.
 
-# 1. Introduction
+## Keywords
+Anomaly; Anomaly Detection; TimeSeries; ARIMA; Holt-Winters; GBDT; Long short-term Memory; Machine Learning
 
-## 1.1 kpi
-There are two types of KPIs: service KPIs and machine KPIs. Service KPIs are performance indicators that reflect the scale and quality of Web services, such as page response times, page views, and number of errors. Machine KPIs are performance indicators that can reflect the health status of machines (servers, routers, switches), such as CPU utilization, memory utilization, disk IO, network throughput, and so on.
+## 1. Introduction
 
-KPI anormal detection refers to the time series data of KPIs analyzed by the algorithm to determine whether abnormal behaviors occur.
+### 1.1 About the KPIs
+Key performance indicators define a set of values against which to measure. These raw sets of values, which can be fed to systems that aggregate the data, are called indicators. There are two types of KPIs: service KPIs and machine KPIs. Service KPIs are performance indicators that reflect the scale and quality of Web services, such as page response times, page views, and number of errors. Machine KPIs are performance indicators that can reflect the health status of machines (servers, routers, switches), such as CPU utilization, memory utilization, disk IO, network throughput, and so on.
+KPI anormal detection refers to the time series data of KPIs analyzed by the algorithm to determine whether abnormal behaviors occur.In other way, KPIs can be divided into two categories:seasonal KPIs and non-seasonal KPIS, In this paper, we focus on seasonal KPIs.
 
-## 1.2 About the Problem
-1. The frequency of abnormal occurrence is very low. In the actual Operation Maintenance, there are very few exceptions in the business system, so there are very few abnormal data to be analyzed.
-2. Diversity of exceptional species. Because the actual business system is complex and constantly updated, the types of failures are varied, resulting in the diversity of the exception types.
-3. The diversity of kpis. Kpis are characterized by cycle type, characterized by stable performance, and characterized by unstable and persistent fluctuation.
+### 1.2 About the Data
+The KPI data, which we aims to work with, are the time series data with the format of (timestamp, value). that were saved at 1 minute intervals. This means that that each hour had 60 data points, and each day had 1440. We choose one representative KPI from a search engine which show the search page view(PV),For the owner of the site, this information can be useful to see if any change in the "page" (such as the information or the way it is presented) results in more visits. If there are any advertisements on the page, the publishers would also be interested in the number of page views to determine their expected revenue from the ads. For this reason, it is a term that is used widely for Internet marketing and advertising.
 
-It not only increases the workload of the operation and maintenance personnel, but also causes the operation and maintenance personnel to find the abnormal KPI accurately and timely.
+### 1.3 About the Problem
+In a real world scenario, the operation and maintenance personnel will encounter the following problems:
+1. The frequency of abnormal occurrence is very low. In the actual Operation Maintenance, there are very few exceptions in the business system, so there are very few abnormal data to be analyzed. 2. Diversity of exceptional species. Because the actual business system is complex and constantly updated, the types of failures are varied, resulting in the diversity of the exception types. 3. The diversity of KPIs. KPIs are characterized by cycle type, characterized by stable performance, and characterized by unstable and persistent fluctuation. 4. The optimal parameters and thresholds of a given detector often highly depend on the actual data in the studied service.
+In conclusion,it is difficult to precisely define anomalies in reality and it is impossible for IT ops to quantitatively define anomalies.it is very time-consuming to tune the parameters and thresholds of the anomaly detector.
+
+### 1.4 related work
+Numenta use classification techniques to solve anomaly detection[1,2], but it is unrealistic to expect to always have a dataset with a sufficient and diverse set of labeled anomalies in real scenario. Twitter released an approach to anomaly detection which considers
+seasonality using the Seasonal Hybrid Extreme Studentized Deviate test (S-H-ESD) [3],it is suited for breakout anomalies, not just point anomalies. Yahoo[4] introduces a generic and scalable framework(EGADS) for automated anomaly detection on large scale time-series data.the parallel architecture of EGADS on Hadoop as well as its stream processing mechanism through Storm enable it to perform real-time anomaly detection on millions of timeseries. Google[5] use DNNs to perform regression and predict the expected value in the time series to detect anomalous drops. In this paper we focus on the performance of regression-based machine learning techniques on periodic time series data with limited features.
+
+## 2 data preprocessing and feature project
+
+### 2.1 data preprocessing
+    For various reasons, many real world datasets contain missing values, often encoded as blanks, NaNs or other placeholders. A basic strategy to use incomplete datasets is to discard entire rows and/or columns containing missing values. However, this comes at the price of losing data which may be valuable (even though incomplete). A better strategy is to impute the missing values to infer them from the known part of the data. In this paper, we impute the missing data with mean value of the preceding moments.
+    The training data, which will be fed into the machine learning models, should be in right patterns , that means the anomaly patterns should be replaced by the right patterns. Since we konw the period is one day, so we replace the anomaly point with the value same time of the previous day  and the five preceding moments values,[添加公式]
+### 2.2 feature project
+In the raw training data, the only feature avilibale for us to use is timestamp and it's corresponding value. However, machine learning approaches work better if there are more features. So we try to create other features that are not linearly correlated with the original timestamp feature. In this paper, we decomposed the timestamp into multiple by converting hours, minutes and weekday into one hot encodings, Further more, we added the value of the same time the day before[公式] and a week ago [公式]in the hopes that it could help the model learn better by creating more features with more complicated relations.
+
+## 3.prediction
+
+### 3.1 time series analysis method
+
+#### 3.1.1 Holt-Winters
+Triple exponential smoothing applies exponential smoothing three times, which is commonly used when there are three high frequency signals to be removed from a time series under study.There are different types of seasonality: 'multiplicative' and 'additive' in nature, much like addition and multiplication are basic operations in mathematics. Multiplicative seasonality can be represented as a constant factor, not an absolute amount. In this paper, we use multiplicative seasonality. 
+#### 3.1.2 ARIMA
+
+### 3.2 machine learning
+
+#### 3.2.1 GBDT
+
+#### 3.2.2 LSTM
+
+## 4. judge
+
+## 5. conclusion
+
+## 6. REFERENCES
+[1] Ahmad S, Purdy S. Real-Time Anomaly Detection for Streaming Analytics[J]. 2016.
+[2] “The Science of Anomaly Detection,” Numenta, Redwood City, CA, 2015.
+[3] A. Kejariwal. (2015, January 6) Introducing practical and robust anomaly detection in a time series,[Online].Available:https://blog.twitter.com/engineering/en_us/a/2015/introducing-practical-and-robust-anomaly-detection-in-a-time-series.html
+[4] Laptev N, Amizadeh S, Flint I. Generic and Scalable Framework for Automated Time-series Anomaly Detection[J]. 2015:1939-1947.
+[5] Shipmon D T, Gurevitch J M, Piselli P M, et al. Time Series Anomaly Detection; Detection of anomalous drops with limited features and sparse examples in noisy highly periodic data[J]. 2017.
+
+
+
+- 强调非监督学习的方法
+
+## 传统方法：
+we compared them to a threshold model, which would constantly predict a very low value.
+The intuitive approach for comparing the predictions actual value to determine whether a point is anomalous or not is by simply calculating the euclidean distance and setting a threshold. However, this could lead to numerous false positives especially with noisy data
+
+## Related Work（from ）
+like simple thresholds, clustering, and exponential smoothing, are only capable of detecting spatial anomalies. Holt-Winters is an example of the latter that is commonly implemented for commercial applications (Szmit & Szmit, 2012).Also commonly used in practice are change point detection methods, which are capable of identifying temporal anomalies. The typical approach is to model the time series in two independent moving windows and detect when there is a significant deviation in the time series metrics (Basseville & Nikiforov, 1993). These methods are often extremely fast to compute and have low memory overhead.The detection performance of these statistical techniques can be sensitive to the size of the windows and thresholds. This sometimes results in many false positives as the data changes, requiring frequent updates to the thresholds in order to detect anomalies while minimizing false positives.
+The Skyline project provides an open source implementation of a number of statistical techniques for detecting anomalies in streaming data (Stanway, 2013). The different algorithms can be combined into an ensemble.
+There are other algorithms capable of detecting temporal anomalies in complex scenarios. ARIMA is a general purpose technique for modeling temporal data with seasonality (Bianco et al., 2001). It is effective at detecting anomalies in data with regular daily or weekly patterns. It is not capable of dynamically determining the period of seasonality, although extensions have been developed for doing so (Hyndman & Khandakar, 2008). A technique for applying ARIMA to multivariate data has also been studied (Tsay,2000). Bayesian change point detection methods are a natural approach to segmenting time series and can be used for online anomaly detection (Adams & Mackay, 2007; Tar-takovsky et al., 2013).
+
+Yahoo released the open source EGADS framework for time series anomaly detection that pairs time series forecasting techniques with common anomaly detection algorithms (Laptev et al., 2015). Twitter released its own open source anomaly detection algorithms for time series data (Kejariwal, 2015). Both are capable of detecting spatial and temporal anomalies.
+
+
+## idea
+孤异森林后续再加入
+
+
+## anonamy detection importance
+- The detection of anomalies in real-time streaming data has practical and significant applications across many industries. There are numerous use cases for anomaly detection, including preventative maintenance, fraud prevention, fault detection, and monitoring. The use cases can be found throughout numerous industries such as finance, IT, security, medical, energy, e-commerce, and social media.
+## Question 
+- 在哪里写创新？
+## todo
+- 加timestamp为特征，做比较
+- 加平均值和方差做为特征，
+- 前一天，前一周对应的值作为特征。

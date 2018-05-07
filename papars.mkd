@@ -51,6 +51,7 @@
 ## 异常检测
 ### 1. Detection of Anomalous Drops with Limited Features and Sparse Examples in Noisy Highly Periodic Data 推荐
 - google和剑桥大学的合作项目
+- 2016
 - 两个步骤：通过LSTM预测，然后和真实值比较，设定规则，是连续的超过上下限或者单点超过则认为异常。
 - 问题：聚类/孤异森林异常检测适用于特征比较多的数据，ts只有一维数据
 - 每一个数据流都建立一个model，因为他们没有相关性
@@ -59,7 +60,8 @@
     - 多点
         - 建立累加器(accumulator)
         - 概率的方法-Gaussian Tail Probability
-- Netflix/twitter Robust Principle Component Analysis/Seasonal Hybrid Extreme Studentized Deviate test (S-H-ESD)
+- Netflix： Robust Principle Component Analysis
+- Twitter: Seasonal Hybrid Extreme Studentized Deviate test (S-H-ESD)
 - 特征处理：converted the unix timestamp into aweekday, hour, and minutes feature，one hot encodings，归一化
 
 ### 2. Long Short Term Memory Networks for Anomaly Detection in Time Series 
@@ -70,8 +72,11 @@
 - stacked LSTM
 - 评价指标：pr曲线，F1值
 
+
 ## 裴丹
-### 1. Opprentice: Towards Practical and Automatic Anomaly Detection Through Machine Learning- 2015年
+### 1. Opprentice: Towards Practical and Automatic Anomaly Detection Through Machine Learning
+
+- 2015年
 -  a novel approach based on supervised machine learning
 - iven a KPI, the first step for the anomaly detection practitioner is to collect the requirements from the service operators. This step encounters Definition Challenges: it is difficult to precisely define anomalies in reality [21, 25]. In particular, the operators often have trouble describing their domain knowledge completely when “put on the spot” [25]. In addition, it is often impossible for the operators to quantitatively define anomalies, let alone to translate the vague definition into specific parameters and thresholds of a detecto
 - 1先标记，2different detectors can naturally serve as the features in machine learning, so each detector can serve as a feature extractor。
@@ -79,8 +84,13 @@
 - apply machine learning to acquiring realistic anomaly definitions and automatically combining and tuning diverse detectors to satisfy operators’ accuracy preference.
 - problem: labeling overhead, infrequent anomalies, class imbalance, and irrelevant and redundant features
 -  does not require manual detector selection, parameter configuration, or threshold tuning.
-- 
 
+
+### 2. Numenta: Real-Time Anomaly Detection for Streaming Analytics
+- Numenta，2016
+- based on an on-line sequence memory algorithm called Hierarchical Temporal Memory (HTM).
+- NAB 就是他家的
+- 能随着概率分布的改变而进行自身调整
 
 # 小论文思路
 - 训练样本必须先进行异常处理。
