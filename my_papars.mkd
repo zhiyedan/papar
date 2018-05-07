@@ -45,9 +45,9 @@ Triple exponential smoothing applies exponential smoothing three times, which is
 ### 3.2 machine learning
 
 #### 3.2.1 GBDT
-
+Gradient boosting using decision trees as base learners, so called Gradient Boosted Decision Trees (GBDT), is a very successful ensemble learning algorithm widely used across a variety of applications. Boosting means that each tree is dependent on prior trees. The algorithm learns by fitting the residual of the trees that preceded it. Thus, boosting in a decision tree ensemble tends to improve accuracy with some small risk of less coverage. Various GDBT construction algorithms and implementation have been designed and heavily optimized in some very popular open sourced toolkits such as XGBoost and LightGBM. In this paper, we use sklearn GradientBoostingRegressor as regression model to train.
 #### 3.2.2 LSTM
-
+Long Short Term Memory (LSTM) networks have been demonstrated to be particularly useful for learning sequences containing longer term patterns of unknown length, due to their ability to maintain long term memory. Stacking recurrent hidden layers in such networks also enables the learning of higher level temporal features, for faster learning with sparser representations. A network is trained on preprocessed data and used as a predictor over a number of time steps.
 ## 4. judge
 
 ## 5. conclusion
